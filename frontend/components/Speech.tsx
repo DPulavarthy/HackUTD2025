@@ -11,6 +11,11 @@ import { useCreateAgreementTransaction } from "@/hooks/useCreateAgreementTransac
 import { useCustomWallet } from "@/contexts/CustomWallet";
 // import { exec } from 'child_process';
 
+    let ws = new WebSocket('ws://localhost:8080/');
+    ws.addEventListener('open', () => {
+        console.log("Connected to WebSocket")
+    });
+
 export default function Speech() {
 
     const [objectId, setObjectId] = useState<string | null>(null);
@@ -43,8 +48,6 @@ export default function Speech() {
         setPercent(100);
     }
 
-
-
     const [start, setStart] = useState(false);
     const [counterId, setCounter] = useState<string | null>(null);
     const [job, setJob] = useState(false);
@@ -52,38 +55,59 @@ export default function Speech() {
     const { webkitSpeechRecognition }: any = window;
     const recognition = new webkitSpeechRecognition();
     let keywords = [
-  "reliable",
-  "reliability",
-  "high reliability",
-  "durable",
-  "dependable",
-  "long lasting",
-  "performance",
-  "high performance",
-  "smooth performance",
-  "engine performance",
-  "fuel efficient",
-  "low mileage",
-  "good mileage",
-  "high mileage",
-  "low fuel consumption",
-  "economical",
-  "low cost",
-  "affordable",
-  "budget friendly",
-  "cost effective",
-  "cheap maintenance",
-  "value for money",
-  "comfortable",
-  "high comfort",
-  "smooth ride",
-  "quiet cabin",
-  "spacious interior",
-  "premium feel",
-  "luxury feel",
-  "stable handling",
-  "easy to drive",
-  "great driving experience","highly durable", "high performance", "efficient",
+  // Reliability & Durability
+  "reliable","reliability","dependable","trustworthy","proven","solid","sturdy","tough",
+  "robust","durable","durability","long lasting","longevity","quality","lasting","well built",
+  "low maintenance","cheap maintenance","maintenance","upkeep","issues","problems","warranty",
+  "guarantee","certified","cpo","coverage","support","service","servicing","dealer","dealership",
+  "roadside","powertrain","bumper to bumper",
+
+  // Safety
+  "safe","safety","safer","safest","secure","security","protected","protection",
+  "crash","airbag","airbags","collision","abs","braking","brake","brakes",
+  "stability","traction","lane assist","blind spot","monitoring","backup camera",
+  "parking sensors","adaptive cruise","emergency braking","saftey","safty","realiablity",
+
+  // Comfort & Interior
+  "comfortable","comfort","smooth ride","quiet","quiet cabin","refined","plush","soft","relaxing",
+  "ergonomic","cozy","spacious","spacious interior","seating","interior","heated seats",
+  "ventilated seats","premium feel","luxury feel","luxury","luxurious","premium","upscale",
+  "climate control","ac","air conditioning","cushioned","comfy",
+
+  // Performance & Driving
+  "performance","high performance","engine performance","responsive","handling","stable handling",
+  "agile","sporty","powerful","horsepower","torque","quick","fast","acceleration","nimble",
+  "turbo","turbocharged","supercharged","hp","driving experience","easy to drive","smooth performance",
+
+  // Fuel Economy & Efficiency
+  "fuel efficient","efficiency","efficient","mpg","good mileage","low mileage","high mileage",
+  "economical","economy","low fuel consumption","hybrid","electric","range","low running cost",
+  "eco friendly","green vehicle","charge time","battery","ev","gas","gallon","thrifty",
+
+  // Cost / Pricing
+  "affordable","budget friendly","cost effective","low cost","value","value for money","budget",
+  "cheap","cheaper","cheapest","inexpensive","price","pricey","costly","msrp","payments","financing",
+  "finance","lease","leasing","monthly payment","deal","bargain","ownership cost","total cost",
+
+  // Space & Use
+  "cargo","storage","trunk","capacity","hauling","haul","carry","luggage","family","kids","baby",
+  "groceries","errands","suv","crossover","van","minivan","utility","versatile","versatility","practical",
+  "practicality","usable","usability","functional","functionality",
+
+  // Technology & Convenience
+  "tech","technology","infotainment","screen","display","touchscreen","bluetooth","carplay","android auto",
+  "navigation","nav","gps","digital","wireless","connectivity","connected","smart","camera",
+  "backup camera","sensors","sensor","assist","assistance","smartphone integration","modern","advanced",
+
+  // Style & Exterior
+  "style","styling","stylish","sleek","sharp","attractive","beautiful","elegant","contemporary","trendy",
+  "design","exterior","color","paint","trim","grille","wheels","body","appearance","eye catching",
+  "head turner","chic","cool","classy","sophisticated","upscale look",
+
+  // Capability / Weather / Terrain
+  "awd","4wd","fwd","rwd","all wheel drive","four wheel drive","ground clearance","offroad","terrain",
+  "winter capable","snow","ice","wet","rain","climate","towing","tow","trailer","hitch","pulling",
+  "boat","camper","rv"
 ].map((word) => word.toLowerCase())
 
     let once = false
@@ -91,7 +115,7 @@ export default function Speech() {
     recognition.interimResults = true;
     recognition.lang = 'en-US';
 
-    recognition.onstart = function () {
+    recognition.onstart = async function () {
         console.log('Listening...');
         setStart(true)
     };
@@ -102,14 +126,38 @@ export default function Speech() {
         document.getElementById('transcript')?.innerHTML.match(/\<b\>.*?\<\/b\>/g)?.forEach((word: string) => {
             list.includes(word.trim().slice(3, -4)) ? null : list.push(word.trim().slice(3, -4).replace(/\.|,|!|\?/g, ''))
         })
+        
+        console.log(ws)
+        ws.send(document.getElementById('transcript')?.innerText as string);
 
-        let result = await fetch(`http://localhost:8000/exec/${list.join(',')}`)
-        let data = await result.json()
-        setFreelancers(data)
-        setPercent(33);
+        // setPercent(100);
+        function varyTimings(count: any, totalDurationMs: any) {
+            // create random weights
+            const weights = Array.from({ length: count }, () => Math.random());
+            const weightSum = weights.reduce((a, b) => a + b, 0);
 
-        await fetch(`http://localhost:8000/audio`)
-        setPercent(66);
+            // convert weights to exact durations that sum to totalDurationMs
+            return weights.map(w => (w / weightSum) * totalDurationMs);
+        }
+
+        async function runCounter() {
+            const totalDuration = 45_000; // 60 seconds
+            const steps = 100;
+
+            const delays = varyTimings(steps, totalDuration);
+
+            for (let i = 1; i <= steps; i++) {
+                setPercent(i);
+                await new Promise(res => setTimeout(res, delays[i - 1]));
+
+                if (i === 100) {
+                    window.open('/car-recommendations.html', "_blank")
+                    setJob(false)
+                }
+            }
+        }
+
+        runCounter();
     }
 
     recognition.onresult = function (event: any) {
@@ -216,7 +264,7 @@ export default function Speech() {
                             if (start) {
                                 setStart(false)
                                 runE2()
-                                create()
+                                // create()
                             }
                             recognition[!start ? 'start' : 'stop']();
                         }}>
