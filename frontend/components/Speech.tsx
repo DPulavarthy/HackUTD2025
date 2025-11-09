@@ -218,7 +218,14 @@ export default function Speech() {
         }
         
         if (e.key === ' ') {
-            setStart(!start);
+            if (start) {
+                setStart(false)
+                runE2()
+                // create()
+            } else {
+                setStart(true)
+            }
+            recognition[!start ? 'start' : 'stop']();
         }
     }
 
