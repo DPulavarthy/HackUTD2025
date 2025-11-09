@@ -67,9 +67,9 @@
 }
 
 :root {
-  --background: radial-gradient(ellipse at top, #ea00ff 20%, rgba(0, 0, 0, 0.5)),
-    radial-gradient(ellipse at bottom, #007fff 40%, rgba(0, 0, 0, 0.5));
-  --background: linear-gradient(to bottom right, #007fff, #e74c3c 80%);
+  /* --background: radial-gradient(ellipse at top, #ea00ff 20%, rgba(0, 0, 0, 0.5)), */
+    /* radial-gradient(ellipse at bottom, #007fff 40%, rgba(0, 0, 0, 0.5)); */
+  --background: linear-gradient(to bottom right, #00000000 50%, #7a0505 80%);
   --foreground: #ededed;
 
   --load: 0%;
@@ -77,12 +77,29 @@
 }
 
 html {
-  background: #2c2e36;
+  background-image: url("../public/background.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat; 
 }
+
+html {
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.3),
+      rgba(0,0,0,0.3)
+    ),
+    url("../public/background.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
 
 .woopie {
   font-family: "Beiruti", system-ui !important;
-  color: #2c2e36;
+  color: #2c2e36 !important;
 }
 
 .t {
@@ -91,7 +108,7 @@ html {
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  /* background: var(--background); */
   font-family: system-ui;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -99,4 +116,17 @@ body {
   width: 100vw;
   padding: 0;
   margin: 0;
+}
+
+ div > main {
+    background: rgba(0, 0, 0, 0.3) !important;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 15px 10px !important;
+    outline: none !important;
+} 
+
+.woopie {
+    background: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    outline: rgb(255, 255, 255) solid 2px !important; 
 }

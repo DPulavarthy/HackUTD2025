@@ -1,20 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=SUSE:wght@100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Spectral+Lato:wght@100..800&display=swap');
 
 .logo {
     margin: 0;
-    font-size: 65px;
+    font-size: 45px;
     font-weight: 700;
-    color: #fefefe;
+    color: #c0c0c0;
     width: 100vw;
     display: flex;
     justify-content: center;
     text-align: center;
-    text-transform: uppercase;
     font-style: italic;
-    cursor: pointer;
     position: fixed;
-    z-index: 100;
-    margin-top: 15px;
+    user-select: none;
+    z-index: 100;    
 }
 
 .logo div {
@@ -28,25 +26,4 @@
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
     transition-delay: 100ms;
     font-family: 'SUSE', system-ui;
-}
-
-
-.logo div:hover span {
-    color: #f04747;
-}
-
-.logo div:hover span:nth-child(1):after {
-    width: 177px;
-}
-
-.logo div:hover span:nth-child(2):after {
-    width: 120px;
-}
-
-.logo div:hover span:nth-child(3):after {
-    width: 150px;
-}
-
-.logo div:hover span:nth-child(4):after {
-    width: 130px;
 }
