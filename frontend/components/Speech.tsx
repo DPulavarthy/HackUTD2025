@@ -216,6 +216,10 @@ export default function Speech() {
         if (e.key === 'Escape' && job) {
             setJob(false)
         }
+        
+        if (e.key === ' ') {
+            setStart(!start);
+        }
     }
 
     return (<>
